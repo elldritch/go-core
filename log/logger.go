@@ -20,66 +20,50 @@ func From(ctx context.Context) *Logger {
 // TODO: alternatively, logging frame + 1 caller upwards? use pkg/file:line
 func (l *Logger) Panic() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Panic().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Panic())
 	}
 	return l.Logger.Panic()
 }
 
 func (l *Logger) Fatal() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Fatal().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Fatal())
 	}
 	return l.Logger.Fatal()
 }
 
 func (l *Logger) Error() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Error().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Error())
 	}
 	return l.Logger.Error()
 }
 
 func (l *Logger) Warn() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Warn().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Warn())
 	}
 	return l.Logger.Warn()
 }
 
 func (l *Logger) Info() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Info().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Info())
 	}
 	return l.Logger.Info()
 }
 
 func (l *Logger) Debug() *zerolog.Event {
 	if dbg {
-		_, file, line, ok := runtime.Caller(1)
-		if !ok {
-			panic("unable to get caller")
-		}
-		return l.Logger.Debug().Str("file", file).Int("line", line)
+		return logWithCaller(l.Logger.Debug())
 	}
 	return l.Logger.Debug()
+}
+
+func logWithCaller(e *zerolog.Event) *zerolog.Event {
+	_, file, line, ok := runtime.Caller(2) // Caller(2) because this is being called by the logger method.
+	if !ok {
+		panic("unable to get caller")
+	}
+	return e.Str("file", file).Int("line", line)
 }

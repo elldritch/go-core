@@ -22,7 +22,7 @@ func (r *Response) body() interface{} {
 
 type renderedResponse struct {
 	Ok     bool        `json:"ok"`
-	Result interface{} `json:"result"`
+	Result interface{} `json:"result,omitempty"`
 }
 
 // OK is a helper for creating Responses with a 200 status code.
