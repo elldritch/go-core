@@ -3,21 +3,12 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-)
-
-// Errors from getting users from a request. These are for matching against the
-// Raw field of Error.
-var (
-	ErrNoAPIToken         = errors.New("no API token provided")
-	ErrExactlyOneAPIToken = errors.New("must provide exactly 1 API token")
-	ErrTokenNotFound      = errors.New("API token not found")
 )
 
 // Request wraps a raw request with useful API utilities.
@@ -108,37 +99,4 @@ func (r *Request) Context() context.Context {
 // structured logging fields.
 func (r *Request) Logger() *zerolog.Logger {
 	return zerolog.Ctx(r.Context())
-}
-
-// ErrorNoAPIToken occurs when a request is expected to have an API token
-// header, but does not.
-func ErrorNoAPIToken() *Error {
-	return &Error{
-		Raw:            ErrNoAPIToken,
-		HTTPStatusCode: http.StatusForbidden,
-		ErrorCode:      "NO_API_TOKEN",
-		Message:        "no API token provided",
-	}
-}
-
-// ErrorExactlyOneAPIToken occurs when a request provides zero or multiple API
-// tokens in API token headers.
-func ErrorExactlyOneAPIToken() *Error {
-	return &Error{
-		Raw:            ErrExactlyOneAPIToken,
-		HTTPStatusCode: http.StatusBadRequest,
-		ErrorCode:      "EXACTLY_ONE_API_TOKEN",
-		Message:        "must provide exactly 1 API token",
-	}
-}
-
-// ErrorAPITokenNotFound occurs when looking up an API token in the database
-// returns no rows.
-func ErrorAPITokenNotFound() *Error {
-	return &Error{
-		Raw:            ErrTokenNotFound,
-		HTTPStatusCode: http.StatusForbidden,
-		ErrorCode:      "INVALID_API_TOKEN",
-		Message:        "incorrect API token",
-	}
 }
