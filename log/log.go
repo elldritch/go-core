@@ -15,6 +15,10 @@ func Init(debug bool) {
 	logger = Logger{&log.Logger}
 }
 
+func With() zerolog.Context {
+	return logger.With()
+}
+
 func Panic() *zerolog.Event {
 	return logger.Panic()
 }
