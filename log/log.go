@@ -12,6 +12,11 @@ var (
 
 func Init(debug bool) {
 	dbg = debug
+	if dbg {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	} else {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
 	logger = Logger{&log.Logger}
 }
 
