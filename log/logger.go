@@ -61,7 +61,7 @@ func (l *Logger) Debug() *zerolog.Event {
 }
 
 func logWithCaller(e *zerolog.Event) *zerolog.Event {
-	_, file, line, ok := runtime.Caller(2) // Caller(2) because this is being called by the logger method.
+	_, file, line, ok := runtime.Caller(3) // Caller(3) logger.X -> log.X -> caller
 	if !ok {
 		panic("unable to get caller")
 	}
